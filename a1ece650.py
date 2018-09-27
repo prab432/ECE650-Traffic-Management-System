@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Sep 27 14:32:11 2018
+
+@author: yumi.zhang
+"""
+
 import sys
 import re
 
@@ -34,7 +42,13 @@ def intersect (l1, l2):
         xcoor =  xnum / xden
         ycoor = ynum / yden
         if onSegment(x1, x2, xcoor, y1, y2, ycoor) and onSegment(x3, x4, xcoor, y3, y4, ycoor):
-            return (xcoor, ycoor)
+            return (xcoor,ycoor)
+    
+    if xden == 0 and yden == 0:
+        xden_new = (x3-x1)*(y2-y4) - (x2-x4)*(y3-y1)
+        if xden_new == 0:
+            return 'parellel'
+        
     else:
         return None
 
@@ -93,8 +107,15 @@ def get_points(s):
     #s = s[1:]
     s = s.split(' ')
     s_new = [x for x in s if x != ""]
-    vertex = []
-    tmp = []
+    #vertex = []
+    #tmp = []
+    
+    vertex_even = s_new[0::2]
+    vertex_odd = s_new[1::2]
+    
+    for i in range(len(vertex_even)):
+        new_vertex.append((int(vertex_even[i]),int(vertex_odd[i])))
+    '''
     for i in range(len(s_new)):
         if i % 2 == 0:
             tmp.append(int(s_new[i]))
@@ -105,7 +126,7 @@ def get_points(s):
     
     for i in vertex:
         new_vertex.append((i[0],i[1]))
-        
+    '''    
     print "vertex is: ", new_vertex
     return new_vertex
 
@@ -133,12 +154,12 @@ def main():
     '''
     while True:
         #in Python 2.x, remember to change!
-        user_input = raw_input("Please input your command: ")
+        user_input = input("Please input your command: ")
         
-        if user_input == '':
-            break
+        #if user_input == '':
+            #break
         
-        elif 'g' == user_input:
+        if 'g' == user_input:
             if len(dic) < 1:
                 print "Error: no street information is entered!"
                 
@@ -148,10 +169,13 @@ def main():
         elif '"' not in user_input:
             print "Error: invalid input! Please check again!"
         
-        elif '"' in user_input:
+        elif '"' in user_input and len(user_input.split('"'))==3:
             user_input_list = user_input.split('"')
             
-            if isValidParentheses(user_input_list[2]) and isValidNumberinParentheses(user_input_list[2]) and len(user_input_list[0]) == 2 and user_input_list[2].split(' ')[0] == "" and isValidStreeName(user_input_list[1]):
+            #remember here add the command limit: limit the character number to 2
+            #len(user_input_list[0]) == 2
+            
+            if isValidParentheses(user_input_list[2]) and isValidNumberinParentheses(user_input_list[2]) and user_input_list[2].split(' ')[0] == "" and isValidStreeName(user_input_list[1]):
                 print "valid parenthess and space"
                 vertex = get_points(user_input_list[2])
             
@@ -202,11 +226,21 @@ def get_vertex_edges():
                 l1 = Line(Point(all_points[i][m][0], all_points[i][m][1]), Point(all_points[i][m+1][0], all_points[i][m+1][1]))
                 for n in range(len(all_points[j])-1):
                     l2 = Line(Point(all_points[j][n][0], all_points[j][n][1]), Point(all_points[j][n+1][0], all_points[j][n+1][1]))
-                    if intersect(l1, l2):
+                    intersect_result = intersect(l1, l2)
+                    
+                    if intersect_result and intersect_result != 'parellel':
                         if [all_points[i][m], intersect(l1, l2), all_points[i][m+1]] not in intersection_line:
                             intersection_line.append([all_points[i][m], intersect(l1, l2), all_points[i][m+1]])
                         if [all_points[j][n], intersect(l1, l2), all_points[j][n+1]] not in intersection_line:
                             intersection_line.append([all_points[j][n], intersect(l1, l2), all_points[j][n+1]])
+                    
+                    elif intersect_result == 'parellel':
+                        four_points = [all_points[i][m], all_points[i][m+1], all_points[j][n], all_points[j][n+1]]
+                        four_points = sorted(four_points)
+                    
+                        intersection_line.append([four_points[0], four_points[1], four_points[2]])
+                        intersection_line.append([four_points[1], four_points[2], four_points[3]])   
+                    
                     else:
                         continue  
                     
@@ -249,21 +283,25 @@ def get_vertex_edges():
     output_v = dict(zip(key, pos))
     print "V = {"
     for key, value in output_v.items():
-        print str(key) + ':' + str(value)
+        print ' ' + str(key) + ': '+'('+ str(round(value[0], 2)) + ',' + str(round(value[1], 2)) + ')'
     print "}"
-        
+            
+    final_edges = []
     
-    print "E = {"
     for i in range(len(intersection_line)):
         for j in range(len(intersection_line[i])-1):            
             first = list(output_v.values()).index(intersection_line[i][j])
             second = list(output_v.values()).index(intersection_line[i][j+1])
-            print '<' + str(round(first, 2)) + ',' + str(round(second, 2)) + '>,'
+            final_edges.append('<' + str(first) + ',' + str(second) + '>')
+            
+    final_edges = list(set(final_edges))
+    print "E = {"
+    for i in range(len(final_edges)): 
+        if i == len(final_edges)-1:
+            print ' ' + final_edges[i]
+        else:
+            print ' ' + final_edges[i] + ','
     print '}'
     
-    
-    
-    
-
 if __name__ == '__main__':
     main()
