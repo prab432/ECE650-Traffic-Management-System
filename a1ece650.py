@@ -154,7 +154,7 @@ def main():
     '''
     while True:
         #in Python 2.x, remember to change!
-        user_input = input("Please input your command: ")
+        user_input = raw_input("Please input your command: ")
         
         #if user_input == '':
             #break
