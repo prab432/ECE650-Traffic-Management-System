@@ -37,6 +37,12 @@ def intersect (l1, l2):
     
     ynum = (x1*y2 - y1*x2)*(y3-y4) - (y1-y2)*(x3*y4-y3*x4)
     yden = (x1-x2)*(y3-y4) - (y1-y2)*(x3-x4)
+    
+    if xnum == -0.0:
+        xnum = 0.0
+        
+    if ynum == -0.0:
+        ynum = 0.0
 
     if xden != 0 and yden != 0:
         xcoor =  xnum / xden
