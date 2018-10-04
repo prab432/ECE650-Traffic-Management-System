@@ -166,8 +166,8 @@ def main():
             break
         
         elif 'g' == user_input.strip(' '):
-            if len(dic) < 1:
-                print "Error: no street information is entered!"
+            #if len(dic) < 1:
+                #print "Error: no street information is entered!"
                 
             #print "calling the generated graph for you!"
             get_vertex_edges() 
