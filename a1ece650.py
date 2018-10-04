@@ -140,6 +140,7 @@ def get_points(s):
 
     
 dic = {}
+vertex_id = []
 
 
 def main():
@@ -186,14 +187,18 @@ def main():
             if isValidParentheses(user_input_list[2]) and isValidNumberinParentheses(user_input_list[2]) and user_input_list[2].split(' ')[0] == "" and isValidStreetName(user_input_list[1]):
                 #print "valid parenthess and space"
                 vertex = get_points(user_input_list[2])
-            
+                
+                for i in vertex:
+                    if i not in vertex_id:
+                        vertex_id.append(i)
+                        
                 if 'a' == user_input_list[0].strip(' ') and len(user_input_list) == 3 and 'a ' in user_input_list[0]:
                     if user_input_list[1].lower() not in dic:
                         dic[user_input_list[1].lower()] = vertex
                     else:
                         print "Error: street name already exists, you might change 'a' into 'c' for changing information!"
                         
-                elif 'c' in user_input_list[0].strip(' ') and len(user_input_list) == 3:
+                elif 'c' in user_input_list[0].strip(' ') and len(user_input_list) == 3 and 'c ' in user_input_list[0]:
                     if user_input_list[1].lower() in dic:
                         dic[user_input_list[1].lower()] = vertex
                     else:
@@ -204,7 +209,7 @@ def main():
                     
                 #print "Your dictionary information is: ", dic
                 
-            elif 'r' in user_input_list[0].strip(' ') and isValidStreetName(user_input_list[1]) and len(user_input_list[0]) == 2:
+            elif 'r' in user_input_list[0].strip(' ') and isValidStreetName(user_input_list[1]) and len(user_input_list[0]) == 2 and 'r ' in user_input_list[0]:
                 if user_input_list[1].lower() in dic:
                     del dic[user_input_list[1].lower()]
                 else:
@@ -241,7 +246,10 @@ def get_vertex_edges():
                             intersection_line.append([all_points[i][m], intersect(l1, l2), all_points[i][m+1]])
                         if [all_points[j][n], intersect(l1, l2), all_points[j][n+1]] not in intersection_line:
                             intersection_line.append([all_points[j][n], intersect(l1, l2), all_points[j][n+1]])
-                    
+                        
+                        if intersect_result not in vertex_id:
+                            vertex_id.append(intersect_result)
+                            
                     elif intersect_result == 'parellel':
                         four_points = [all_points[i][m], all_points[i][m+1], all_points[j][n], all_points[j][n+1]]
                         four_points = sorted(four_points)
@@ -287,8 +295,13 @@ def get_vertex_edges():
             if j not in pos:
                 pos.append(j)
             
-    key = list(range(len(pos)))
-    output_v = dict(zip(key, pos))
+    #key = list(range(len(pos)))
+    #output_v = dict(zip(key, pos))
+        
+    output_v = {}
+    for i in pos:
+        output_v[vertex_id.index(i)] = i
+        
     print "V = {"
     for key, value in output_v.items():
         print ' ' + str(key) + ': '+'('+ str(round(value[0], 2)) + ',' + str(round(value[1], 2)) + ')'
@@ -297,9 +310,10 @@ def get_vertex_edges():
     final_edges = []
     
     for i in range(len(intersection_line)):
-        for j in range(len(intersection_line[i])-1):            
-            first = list(output_v.values()).index(intersection_line[i][j])
-            second = list(output_v.values()).index(intersection_line[i][j+1])
+        for j in range(len(intersection_line[i])-1): 
+            first = list(output_v.keys())[list(output_v.values()).index(intersection_line[i][j])]
+            second = list(output_v.keys())[list(output_v.values()).index(intersection_line[i][j+1])]
+            
             final_edges.append('<' + str(first) + ',' + str(second) + '>')
             
     final_edges = list(set(final_edges))
