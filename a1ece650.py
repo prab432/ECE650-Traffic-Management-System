@@ -85,7 +85,9 @@ def isValidNumberinParentheses(s):
             return False
     return True
 
-def isValidStreeName(s):
+def isValidStreetName(s):
+    if s == "":
+        return False
     if all(x.isalpha() or x.isspace() for x in s):
         return True
     return False
@@ -181,7 +183,7 @@ def main():
             #remember here add the command limit: limit the character number to 2
             #len(user_input_list[0]) == 2
             
-            if isValidParentheses(user_input_list[2]) and isValidNumberinParentheses(user_input_list[2]) and user_input_list[2].split(' ')[0] == "" and isValidStreeName(user_input_list[1]):
+            if isValidParentheses(user_input_list[2]) and isValidNumberinParentheses(user_input_list[2]) and user_input_list[2].split(' ')[0] == "" and isValidStreetName(user_input_list[1]):
                 #print "valid parenthess and space"
                 vertex = get_points(user_input_list[2])
             
@@ -202,12 +204,12 @@ def main():
                     
                 #print "Your dictionary information is: ", dic
                 
-            elif 'r' in user_input_list[0].strip(' ') and isValidStreeName(user_input_list[1]) and len(user_input_list[0]) == 2:
+            elif 'r' in user_input_list[0].strip(' ') and isValidStreetName(user_input_list[1]) and len(user_input_list[0]) == 2:
                 if user_input_list[1].lower() in dic:
                     del dic[user_input_list[1].lower()]
                 else:
                     print "Error: 'r' specified for a street that does not exist!"
-                    
+                 
             else:
                 print "Error: invalid input!"
                 
