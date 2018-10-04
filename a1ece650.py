@@ -187,7 +187,7 @@ def main():
                 #print "valid parenthess and space"
                 vertex = get_points(user_input_list[2])
             
-                if 'a' == user_input_list[0].strip(' ') and len(user_input_list) == 3:
+                if 'a' == user_input_list[0].strip(' ') and len(user_input_list) == 3 and 'a ' in user_input_list[0]:
                     if user_input_list[1].lower() not in dic:
                         dic[user_input_list[1].lower()] = vertex
                     else:
