@@ -313,8 +313,8 @@ def get_vertex_edges():
         for j in range(len(intersection_line[i])-1): 
             first = list(output_v.keys())[list(output_v.values()).index(intersection_line[i][j])]
             second = list(output_v.keys())[list(output_v.values()).index(intersection_line[i][j+1])]
-            
-            final_edges.append('<' + str(first) + ',' + str(second) + '>')
+            if first != second:
+                final_edges.append('<' + str(first) + ',' + str(second) + '>')
             
     final_edges = list(set(final_edges))
     print "E = {"
