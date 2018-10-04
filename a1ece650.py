@@ -161,69 +161,70 @@ def main():
     while True:
         #in Python 2.x, remember to change!
         user_input = raw_input("Please input your command: ")
-        
-        #if user_input == '':
-            #break
-        
-        if 'g' == user_input:
-            if len(dic) < 1:
-                print "Error: no street information is entered!"
-                
-            print "calling the generated graph for you!"
-            get_vertex_edges() 
-        
-        elif '"' not in user_input:
-            print "Error: invalid input! Please check again!"
-        
-        elif '"' in user_input and len(user_input.split('"'))==3:
-            user_input_list = user_input.split('"')
-            
-            #remember here add the command limit: limit the character number to 2
-            #len(user_input_list[0]) == 2
-            
-            if isValidParentheses(user_input_list[2]) and isValidNumberinParentheses(user_input_list[2]) and user_input_list[2].split(' ')[0] == "" and isValidStreeName(user_input_list[1]):
-                print "valid parenthess and space"
-                vertex = get_points(user_input_list[2])
-            
-                if 'a' == user_input_list[0].strip(' ') and len(user_input_list) == 3:
-                    if user_input_list[1].lower() not in dic:
-                        dic[user_input_list[1].lower()] = vertex
+        try:
+            if user_input == '':
+                break
+
+            elif 'g' == user_input.sttip(' '):
+                if len(dic) < 1:
+                    print "Error: no street information is entered!"
+
+                #print "calling the generated graph for you!"
+                get_vertex_edges() 
+
+            elif '"' not in user_input:
+                print "Error: invalid input! Please check again!"
+
+            elif '"' in user_input and len(user_input.split('"'))==3:
+                user_input_list = user_input.split('"')
+
+                #remember here add the command limit: limit the character number to 2
+                #len(user_input_list[0]) == 2
+
+                if isValidParentheses(user_input_list[2]) and isValidNumberinParentheses(user_input_list[2]) and user_input_list[2].split(' ')[0] == "" and isValidStreeName(user_input_list[1]):
+                    #print "valid parenthess and space"
+                    vertex = get_points(user_input_list[2])
+
+                    if 'a' == user_input_list[0].strip(' ') and len(user_input_list) == 3:
+                        if user_input_list[1].lower() not in dic:
+                            dic[user_input_list[1].lower()] = vertex
+                        else:
+                            print "Error: street name already exists, you might change 'a' into 'c' for changing information!"
+
+                    elif 'c' in user_input_list[0].strip(' ') and len(user_input_list) == 3:
+                        if user_input_list[1].lower() in dic:
+                            dic[user_input_list[1].lower()] = vertex
+                        else:
+                            print "Error: 'c' specified for a street that does not exist!"
+
                     else:
-                        print "Error: street name already exists, you might change 'a' into 'c' for changing information!"
-                        
-                elif 'c' in user_input_list[0].strip(' ') and len(user_input_list) == 3:
+                        print "Error: Command is not valid!"
+
+                    #print "Your dictionary information is: ", dic
+
+                elif 'r' in user_input_list[0].strip(' ') and isValidStreeName(user_input_list[1]) and len(user_input_list[0]) == 2:
                     if user_input_list[1].lower() in dic:
-                        dic[user_input_list[1].lower()] = vertex
+                        del dic[user_input_list[1].lower()]
                     else:
-                        print "Error: 'c' specified for a street that does not exist!"
-                
+                        print "Error: 'r' specified for a street that does not exist!"
+
                 else:
-                    print "Error: Command is not valid!"
-                    
-                print "Your dictionary information is: ", dic
-                
-            elif 'r' in user_input_list[0].strip(' ') and isValidStreeName(user_input_list[1]) and len(user_input_list[0]) == 2:
-                if user_input_list[1].lower() in dic:
-                    del dic[user_input_list[1].lower()]
-                else:
-                    print "Error: 'r' specified for a street that does not exist!"
-                    
+                    print "Error: invalid input!"
+
             else:
-                print "Error: invalid input!"
-                
-        else:
-            print "Error: Invalid format, please check again!"
-            
+                print "Error: Invalid format, please check again!"
+        except:
+            print "Invalid input!"
         #sys.exit(0)
         
 def get_vertex_edges():
     input_dic = dic
-    print "input_dic is: ", input_dic
+    #print "input_dic is: ", input_dic
     
     all_points = []
     for i in input_dic:
         all_points.append(input_dic[i])
-    print "all_points is :", all_points
+    #print "all_points is :", all_points
     
     intersection_line = []
     for i in range(len(all_points)):
@@ -250,7 +251,7 @@ def get_vertex_edges():
                     else:
                         continue  
                     
-    print "intersection line is: ", intersection_line
+    #print "intersection line is: ", intersection_line
     new_intersection_line = []
     tmp = []
     for j in range(len(intersection_line) - 1):
@@ -274,7 +275,7 @@ def get_vertex_edges():
             
         if j == len(intersection_line) - 2:
             break
-    print "new intersection line is: ", new_intersection_line
+    #print "new intersection line is: ", new_intersection_line
     
     for i in new_intersection_line:
         intersection_line.append(i)
