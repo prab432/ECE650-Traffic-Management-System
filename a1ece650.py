@@ -133,7 +133,7 @@ def get_points(s):
     for i in vertex:
         new_vertex.append((i[0],i[1]))
     '''    
-    print "vertex is: ", new_vertex
+    #print "vertex is: ", new_vertex
     return new_vertex
 
     
@@ -162,14 +162,14 @@ def main():
         #in Python 2.x, remember to change!
         user_input = raw_input("Please input your command: ")
         
-        #if user_input == '':
-            #break
+        if user_input == '':
+            break
         
-        if 'g' == user_input:
+        elif 'g' == user_input.strip(' '):
             if len(dic) < 1:
                 print "Error: no street information is entered!"
                 
-            print "calling the generated graph for you!"
+            #print "calling the generated graph for you!"
             get_vertex_edges() 
         
         elif '"' not in user_input:
@@ -182,7 +182,7 @@ def main():
             #len(user_input_list[0]) == 2
             
             if isValidParentheses(user_input_list[2]) and isValidNumberinParentheses(user_input_list[2]) and user_input_list[2].split(' ')[0] == "" and isValidStreeName(user_input_list[1]):
-                print "valid parenthess and space"
+                #print "valid parenthess and space"
                 vertex = get_points(user_input_list[2])
             
                 if 'a' == user_input_list[0].strip(' ') and len(user_input_list) == 3:
@@ -200,7 +200,7 @@ def main():
                 else:
                     print "Error: Command is not valid!"
                     
-                print "Your dictionary information is: ", dic
+                #print "Your dictionary information is: ", dic
                 
             elif 'r' in user_input_list[0].strip(' ') and isValidStreeName(user_input_list[1]) and len(user_input_list[0]) == 2:
                 if user_input_list[1].lower() in dic:
@@ -218,12 +218,12 @@ def main():
         
 def get_vertex_edges():
     input_dic = dic
-    print "input_dic is: ", input_dic
+    #print "input_dic is: ", input_dic
     
     all_points = []
     for i in input_dic:
         all_points.append(input_dic[i])
-    print "all_points is :", all_points
+    #print "all_points is :", all_points
     
     intersection_line = []
     for i in range(len(all_points)):
@@ -250,7 +250,7 @@ def get_vertex_edges():
                     else:
                         continue  
                     
-    print "intersection line is: ", intersection_line
+    #print "intersection line is: ", intersection_line
     new_intersection_line = []
     tmp = []
     for j in range(len(intersection_line) - 1):
@@ -274,7 +274,7 @@ def get_vertex_edges():
             
         if j == len(intersection_line) - 2:
             break
-    print "new intersection line is: ", new_intersection_line
+    #print "new intersection line is: ", new_intersection_line
     
     for i in new_intersection_line:
         intersection_line.append(i)
