@@ -37,6 +37,11 @@ def intersect (l1, l2):
         xcoor =  xnum / xden
         ycoor = ynum / yden
         if onSegment(x1, x2, xcoor, y1, y2, ycoor) and onSegment(x3, x4, xcoor, y3, y4, ycoor):
+            if xcoor == -0.0:
+                xcoor = 0.0
+            if ycoor == -0.0:
+                ycoor = 0.0
+                
             return (xcoor,ycoor)
     
     if xden == 0 and yden == 0:
