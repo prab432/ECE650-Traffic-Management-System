@@ -137,7 +137,7 @@ int main() {
 
         if (tokens.size() == 2) {
             if (tokens[0] == "V") {
-                num = std::stoi(tokens[1]);
+                num = std::atoi(tokens[1]);
                 //std::cout << "get number" << std::endl;
                 //Graph g(num + 2);
                 //std::cout << "graph generated successfully!" << std::endl;
@@ -153,10 +153,10 @@ int main() {
 
                 for (int index = 0; index < tokens.size(); ++index) {
                     if (index % 2 == 0) {
-                        if ((std::stoi(tokens[index]) > num) || (std::stoi(tokens[index + 1]) > num)) {
+                        if ((std::atoi(tokens[index]) > num) || (std::atoi(tokens[index + 1]) > num)) {
                             std::cout << "Error: vertice ID is larger than the size of graph" << std::endl;
                         } else {
-                            g.addEdge(std::stoi(tokens[index]), std::stoi(tokens[index + 1]));
+                            g.addEdge(std::atoi(tokens[index]), std::atoi(tokens[index + 1]));
                         }
 
                     } else {
@@ -170,8 +170,8 @@ int main() {
             }
 
         } else if (tokens.size() == 3 && tokens[0] == "s") {
-            start = std::stoi(tokens[1]);
-            end = std::stoi(tokens[2]);
+            start = std::atoi(tokens[1]);
+            end = std::atoi(tokens[2]);
             std::list<int> result_path;
             result_path = g.shortestPath(start, end);
 
