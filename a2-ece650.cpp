@@ -59,7 +59,6 @@ void Graph::addEdge(int v, int w)
 
 std::list<int> Graph::shortestPath(int s, int e)
 {
-    //std::cout << "generating graph" << std::endl;
     bool *visited = new bool[V];
     std::fill_n(visited, V, 0);
 
@@ -110,26 +109,68 @@ std::list<int> Graph::shortestPath(int s, int e)
     return result;
 }
 
-int main() {
-    std::string quit = "q";
-    Graph g(15);
+void buildGraph(std::string allVertice, int num, Graph graph) {
+    std::string edges;
+    edges = replaceStrChar(allVertice, "<", ' ');
+    edges = replaceStrChar(edges, ">", ' ');
+    edges = replaceStrChar(edges, "{", ' ');
+    edges = replaceStrChar(edges, "}", ' ');
+    edges.erase(remove_if(edges.begin(), edges.end(), isspace), edges.end());
+    
+    std::vector<std::string> vertices = split(edges, ","); // ==> ["1","2","3"]
 
-    while (1) {
-        //std::cout << "Enter commands: " << std::endl;
+    for (int index = 0; index < vertices.size(); ++index) {
+        if (index % 2 == 0) {
+            if ((std::stoi(vertices[index]) >= num) || (std::stoi(vertices[index + 1]) >= num)) {
+                std::cout << "Error: vertice ID is larger than the size of graph" << std::endl;
+            } else {
+                    graph.addEdge(std::stoi(vertices[index]), std::stoi(vertices[index + 1]));
+                }
+
+        } else {
+                continue;
+            }
+        }
+}
+
+void generatePath(std::vector<std::string> tokens, Graph g) {
+    std::list<int> result_path;
+    std::list<int>::const_iterator iterator;
+    int start;
+    int end;
+    
+    start = std::stoi(tokens[1]);
+    end = std::stoi(tokens[2]);
+    result_path = g.shortestPath(start, end);
+
+    
+    for (iterator = result_path.begin(); iterator != result_path.end(); ++iterator) {
+        if (iterator != result_path.begin()) {
+            std::cout << "-" << *iterator;
+        } else {
+            std::cout << *iterator;
+            }
+    }
+    std::cout << "\n";
+            
+    if (result_path.empty()) {
+        std::cout << "Error: no path exists between these two vertices or vertex does not exist" << std::endl;
+    }    
+}
+
+int main() {
+    Graph g(0);
+    
+    // crtl + c to exist the program
+    while (std::cin) {
         char input[256];
         std::string input_string;
         std::vector<std::string> tokens;
         int num;
-        int start;
-        int end;
-        std::string edges;
+        
         std::list<int> mylist;
 
-        //Graph g(15); //a problem here
-
         std::cin.getline(input, 256);
-
-        if (input[0] == 'q') break;
 
         input_string = std::string(input); // convert input into string
 
@@ -138,62 +179,19 @@ int main() {
         if (tokens.size() == 2) {
             if (tokens[0] == "V") {
                 num = std::stoi(tokens[1]);
-                //std::cout << "get number" << std::endl;
-                //Graph g(num + 2);
-                //std::cout << "graph generated successfully!" << std::endl;
+                g = Graph(num);
             } else if (tokens[0] == "E") {
-                edges = replaceStrChar(tokens[1], "<", ' ');
-                edges = replaceStrChar(edges, ">", ' ');
-                edges = replaceStrChar(edges, "{", ' ');
-                edges = replaceStrChar(edges, "}", ' ');
-                edges.erase(remove_if(edges.begin(), edges.end(), isspace), edges.end());
-                //std::cout << "clean edges are: " << edges << std::endl;
-
-                std::vector<std::string> tokens = split(edges, ","); // ==> ["1","2","3"]
-
-                for (int index = 0; index < tokens.size(); ++index) {
-                    if (index % 2 == 0) {
-                        if ((std::stoi(tokens[index]) > num) || (std::stoi(tokens[index + 1]) > num)) {
-                            std::cout << "Error: vertice ID is larger than the size of graph" << std::endl;
-                        } else {
-                            g.addEdge(std::stoi(tokens[index]), std::stoi(tokens[index + 1]));
-                        }
-
-                    } else {
-                        continue;
-
-                    }
-                }
-
+                
+                buildGraph(tokens[1], num, g);
             } else {
                 std::cout << "Error: invalid input!" << std::endl;
             }
 
         } else if (tokens.size() == 3 && tokens[0] == "s") {
-            start = std::stoi(tokens[1]);
-            end = std::stoi(tokens[2]);
-            std::list<int> result_path;
-            result_path = g.shortestPath(start, end);
-
-            std::list<int>::const_iterator iterator;
-            for (iterator = result_path.begin(); iterator != result_path.end(); ++iterator) {
-                if (iterator != result_path.begin()) {
-                    std::cout << "-" << *iterator;
-                } else {
-                    std::cout << *iterator;
-                }
-            }
-
-            //std::cout << "result path size: " << result_path.size() << std::endl;
-            if (result_path.empty()) {
-                std::cout << "Error: no path exists between these two vertices or vertex does not exist" << std::endl;
-            }
+            generatePath(tokens, g);
         } else {
             std::cout << "Error: invalid input!" << std::endl;
         }
     }
     return 0;
 }
-
-
-
