@@ -120,7 +120,7 @@ void buildGraph(std::string allVertice, int num, Graph graph) {
     
     std::vector<std::string> vertices = split(edges, ","); // ==> ["1","2","3"]
 
-    for (int index = 0; index < vertices.size(); ++index) {
+    for (unsigned index = 0; index < vertices.size(); ++index) {
         if (index % 2 == 0) {
             if ((std::stoi(vertices[index]) >= num) || (std::stoi(vertices[index + 1]) >= num)) {
                 std::cout << "Error: vertice ID is larger than the size of graph" << std::endl;
@@ -149,7 +149,7 @@ void generatePath(std::vector<std::string> tokens, Graph g) {
     
     std::vector<int> v{ std::begin(result_path), std::end(result_path) };
     
-    for(int i = 0; i < v.size(); ++i)
+    for(unsigned i = 0; i < v.size(); ++i)
     {
       if(i != 0)
         res.append("-");
