@@ -134,13 +134,6 @@ void buildGraph(std::string allVertice, int num, Graph graph) {
         }
 }
 
-
-template <typename Iter, typename Cont>
-bool is_last(Iter iter, const Cont& cont)
-{
-    return (iter != cont.end()) && (next(iter) == cont.end());
-}
-
 void generatePath(std::vector<std::string> tokens, Graph g) {
     std::list<int> result_path;
     std::list<int>::const_iterator iterator;
@@ -154,8 +147,6 @@ void generatePath(std::vector<std::string> tokens, Graph g) {
 
     std::string res;
     
-    //std::list<int> mylist = {0,1,2,3,4,5};
-    
     std::vector<int> v{ std::begin(result_path), std::end(result_path) };
     
     for(int i = 0; i < v.size(); ++i)
@@ -165,9 +156,10 @@ void generatePath(std::vector<std::string> tokens, Graph g) {
       res.append(std::to_string(v[i]));
     }
     
-    std::cout << res << std::endl;
-            
-    if (result_path.empty()) {
+    
+    if (!result_path.empty()) {
+        std::cout << res << std::endl;
+    }else{
         std::cout << "Error: no path exists between these two vertices or vertex does not exist" << std::endl;
     }    
 }
