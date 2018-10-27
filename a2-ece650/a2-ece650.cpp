@@ -7,6 +7,7 @@
 #include <iterator>
 #include <list>
 
+
 // for split the string into tokens with delimeter
 std::vector<std::string> split(std::string str, std::string token){
     std::vector<std::string>result;
@@ -133,9 +134,17 @@ void buildGraph(std::string allVertice, int num, Graph graph) {
         }
 }
 
+
+template <typename Iter, typename Cont>
+bool is_last(Iter iter, const Cont& cont)
+{
+    return (iter != cont.end()) && (next(iter) == cont.end());
+}
+
 void generatePath(std::vector<std::string> tokens, Graph g) {
     std::list<int> result_path;
     std::list<int>::const_iterator iterator;
+    
     int start;
     int end;
     
@@ -143,15 +152,20 @@ void generatePath(std::vector<std::string> tokens, Graph g) {
     end = std::stoi(tokens[2]);
     result_path = g.shortestPath(start, end);
 
+    std::string res;
     
-    for (iterator = result_path.begin(); iterator != result_path.end(); ++iterator) {
-        if (iterator != result_path.begin()) {
-            std::cout << "-" << *iterator;
-        } else {
-            std::cout << *iterator;
-            }
+    //std::list<int> mylist = {0,1,2,3,4,5};
+    
+    std::vector<int> v{ std::begin(result_path), std::end(result_path) };
+    
+    for(int i = 0; i < v.size(); ++i)
+    {
+      if(i != 0)
+        res.append("-");
+      res.append(std::to_string(v[i]));
     }
-    std::cout << "\n";
+    
+    std::cout << res << std::endl;
             
     if (result_path.empty()) {
         std::cout << "Error: no path exists between these two vertices or vertex does not exist" << std::endl;
