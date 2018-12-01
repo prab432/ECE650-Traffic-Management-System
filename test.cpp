@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 
     return 0;
 }
- */
+
 
 #include <time.h>
 #include <stdio.h>
@@ -109,13 +109,39 @@ int main(int argc, char *argv[])
         handle_error_en(s, "pthread_getcpuclockid");
     pclock("Main thread CPU time:   ", cid);
 
-    /* The preceding 4 lines of code could have been replaced by:
-       pclock("Main thread CPU time:   ", CLOCK_THREAD_CPUTIME_ID); */
 
     s = pthread_getcpuclockid(thread, &cid);
     if (s != 0)
         handle_error_en(s, "pthread_getcpuclockid");
     pclock("Subthread CPU time: 1    ", cid);
 
-    exit(EXIT_SUCCESS);         /* Terminates both threads */
+    exit(EXIT_SUCCESS);
 }
+ */
+#include <stdio.h>
+#include <pthread.h>
+#include <iostream>
+//#LDFLAGS=-pthread -lrt
+
+static void pclock(const char *msg, clockid_t cid)
+{
+    struct timespec ts;
+    printf("%s", msg);
+    if (clock_gettime(cid, &ts) == -1)
+        perror("clock_gettime");
+    printf("%4ld.%03ld\n", ts.tv_sec, ts.tv_nsec / 1000000);
+}
+
+
+int main()
+{
+    clockid_t cid;
+    pthread_t pt = pthread_self();
+
+    if (pthread_getcpuclockid(pt, &cid))
+        perror("getcpuclockid failed");
+
+    pclock("the clock is", cid);
+    return 0;
+}
+
