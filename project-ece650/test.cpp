@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
+*/
 
 #include <time.h>
 #include <stdio.h>
@@ -117,31 +117,5 @@ int main(int argc, char *argv[])
 
     exit(EXIT_SUCCESS);
 }
- */
-#include <stdio.h>
-#include <pthread.h>
-#include <iostream>
-//#LDFLAGS=-pthread -lrt
 
-static void pclock(const char *msg, clockid_t cid)
-{
-    struct timespec ts;
-    printf("%s", msg);
-    if (clock_gettime(cid, &ts) == -1)
-        perror("clock_gettime");
-    printf("%4ld.%03ld\n", ts.tv_sec, ts.tv_nsec / 1000000);
-}
-
-
-int main()
-{
-    clockid_t cid;
-    pthread_t pt = pthread_self();
-
-    if (pthread_getcpuclockid(pt, &cid))
-        perror("getcpuclockid failed");
-
-    pclock("the clock is", cid);
-    return 0;
-}
 
