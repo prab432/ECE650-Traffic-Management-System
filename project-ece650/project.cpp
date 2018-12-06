@@ -16,13 +16,9 @@
 #include <errno.h>
 #include <map>
 #include <set>
-// #include <mutex>
-// #include <thread>
-pthread_mutex_t lock;
 
-// std::mutex myMutex;
-// int counting = 0;
 int printFlag = 0;
+int countVec = 0;
 
 #define handle_error(msg) \
                do { perror(msg); exit(EXIT_FAILURE); } while (0)
@@ -30,18 +26,15 @@ int printFlag = 0;
 #define handle_error_en(en, msg) \
                do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
 
-static long long int pclock(clockid_t cid)
+static void pclock(char *msg, clockid_t cid)
 {
     struct timespec ts;
 
-    // printf("%s", msg);
+    printf("%s", msg);
     if (clock_gettime(cid, &ts) == -1)
         handle_error("clock_gettime");
-    // printf("%4ld\n", ts.tv_nsec);
-    // std::cout << ts.tv_sec << " " << ts.tv_nsec << std::end;
-    return ts.tv_nsec;
-    // printf("%lld.%.9ld\n", (long long)ts.tv_sec, ts.tv_nsec);    
-// printf("%4ld.%06ld\n", ts.tv_sec, ts.tv_nsec / 1000000);
+
+    // printf("%4ld.%03ld\n", ts.tv_sec, ts.tv_nsec / 1000000);
 }
 
 // for split the string into tokens with delimeter
@@ -94,6 +87,9 @@ class Graph
 
 public:
     int V;
+    int VEmpFlag = 0;
+    int EEmpFlag = 0;
+
     std::list<int> *adj; // Pointer to an array containing adjacency lists
     std::vector<int> vertex;
     void addEdge(int v, int w); // function to add an edge to graph
@@ -103,6 +99,7 @@ public:
     void approxVC2();
     void init(int V);
     void printRes();
+    bool isEmpty();
 
     std::vector<int> resultVC1;
     std::vector<int> resultVC2;
@@ -118,6 +115,15 @@ void Graph::addEdge(int v, int w)
 {
     adj[v].push_back(w);
     adj[w].push_back(v);
+}
+
+bool Graph::isEmpty()
+{
+    if(this->EEmpFlag && this->VEmpFlag)
+    {
+        return false;
+    }
+    return true;
 }
 
 std::vector<int> Graph::buildGraph(std::string allVertice, int num) {
@@ -166,8 +172,6 @@ struct thread_data{
 
 //APPROX-VC-1
 void Graph::approxVC1() {
-    //  myMutex.lock();
-    // std::cout << "running approxVC1" << std::endl;
     std::vector<int> intVertices = vertex;
 
     std::vector<int> intVerticesCopy = intVertices;
@@ -194,15 +198,11 @@ void Graph::approxVC1() {
     }
 
     sort(this->resultVC1.begin(), this->resultVC1.end());
-    // counting++;
-    // std::cout << "after ruuning approxVC1, counting is: " << counting << std::endl;
-    // myMutex.unlock();
+    countVec++;
 }
 
 //APPROX-VC-2
 void Graph::approxVC2() {
-    // myMutex.lock();
-    // std::cout << "running approxVC2" << std::endl;
     std::vector<int> intVertices = vertex;
 
     std::vector<int> intVerticesCopy = intVertices;
@@ -231,9 +231,7 @@ void Graph::approxVC2() {
         intVerticesCopy = intVertices;
     }
     sort(resultVC2.begin(), resultVC2.end());
-    // counting++;
-    // std::cout << "after ruuning approxVC2, counting is: " << counting << std::endl;
-    // myMutex.unlock();
+    countVec++;
 }
 
 // REDUCTION-TO-CNF-SAT
@@ -323,12 +321,8 @@ std::vector<int> findVetexCover(int numVertices, int numVertexCover, std::vector
 
 //CNF final result
 void Graph::approxCNF() {
-    // myMutex.lock();
-    // std::cout << "running approxCNF" << std::endl;
     std::vector<int> intVertices = vertex;
-
     int numVertices = this->V;
-    // std::cout << "numVertices is: " << numVertices << std::endl;
     std::vector<int> result;
     std::vector<int> finalResult;
 
@@ -348,7 +342,6 @@ void Graph::approxCNF() {
         if (not checkResult) { // can find the vertex cover, reduce the mid to try
             hi = mid - 1;
             finalResult.clear();
-            // this->resultCNF = result;
             finalResult = result;
         } else {
             lo = mid + 1;
@@ -356,21 +349,14 @@ void Graph::approxCNF() {
     }
 
     for (unsigned i = 0; i < finalResult.size(); i++) {
-        // std::cout << "pushing into result cnf" << finalResult[i] << std::endl;
         this->resultCNF.push_back(finalResult[i]);
     }
 
-    // std::cout << "finish cnf" << std::endl;
     sort(this->resultCNF.begin(), this->resultCNF.end());
-    // counting++;
-    // std::cout << "after ruuning approxCNF, counting is: " << counting << std::endl;
-    // myMutex.unlock();
+    countVec++;
 }
 
 void Graph::printRes() {
-    // std::cout << "printing result and checking the size of resultCNF: " << resultCNF.size() << std::endl;
-
-
     std::string resCNF = "CNF-SAT-VC: ";
     std::string resVC1 = "APPROX-VC-1: ";
     std::string resVC2 = "APPROX-VC-2: ";
@@ -385,7 +371,6 @@ void Graph::printRes() {
     }
 
     for (unsigned i = 0; i < this->resultVC1.size(); i++) {
-        // resVC1.append(std::to_string(this->resultVC1[i]));
         if (i == this->resultVC1.size() - 1) {
             resVC1.append(std::to_string(this->resultVC1[i]));
         }else {
@@ -395,7 +380,6 @@ void Graph::printRes() {
     }
 
     for (unsigned i = 0; i < this->resultVC2.size(); i++) {
-        // resVC2.append(std::to_string(this->resultVC2[i]));
         if (i == this->resultVC2.size() - 1) {
             resVC2.append(std::to_string(this->resultVC2[i]));
         }else {
@@ -414,32 +398,37 @@ void Graph::printRes() {
 }
 
 void *threadCNF(void *arg) {
-    pthread_mutex_lock(&lock);    
-// myMutex.lock();
+
     struct thread_data *g = (struct thread_data *)arg;
+    if(g->graph.isEmpty())
+    {
+        return NULL;
+    }
     g->graph.approxCNF();
-    pthread_mutex_unlock(&lock);
     return  NULL;
 }
 
 void *threadVC1(void *arg) {
-    pthread_mutex_lock(&lock);
     struct thread_data *g = (struct thread_data *)arg;
+    if(g->graph.isEmpty())
+    {
+        return NULL;
+    }
     g->graph.approxVC1();
-    pthread_mutex_unlock(&lock);
     return  NULL;
 }
 
 void *threadVC2(void *arg) {
-    pthread_mutex_lock(&lock);
     struct thread_data *g = (struct thread_data *)arg;
+    if(g->graph.isEmpty())
+    {
+        return NULL;
+    }
     g->graph.approxVC2();
-    pthread_mutex_unlock(&lock);
     return  NULL;
 }
 
 void *threadIO(void *arg) {
-    // pthread_mutex_lock(&lock);
     struct thread_data *g = (struct thread_data *)arg;
     using Minisat::mkLit;
     using Minisat::lbool;
@@ -447,32 +436,31 @@ void *threadIO(void *arg) {
     int flag = 0;
     int Vflag= 0;
     int Eflag = 0;
-
+    /*
     if (printFlag != 0) {
         g->graph.printRes();
     }
+     */
 
-    // if (flag == 1 and g->graph.resultCNF.size() != 0) {
-        // std::cout << "read" << std::endl;
-        /*
-        std::cout << "inside thread IO and counting is: " << counting << std::endl;
-
-        while(true) {
-            if (counting == 3) {
-                counting = 0;
+    if(!g->graph.isEmpty())
+    {
+        while(true)
+        {
+            if(countVec == 3)
+            {
+                countVec = 0;
                 break;
             }
         }
-         */
-        // g->graph.printRes();
-    // }
+        g->graph.printRes();
+    }
 
     while (flag == 0) {
         if(std::cin.eof())
         {
             exit(0);
         }
-        pthread_mutex_lock(&lock);
+
         while (!std::cin.eof()) {
 
             std::vector <std::string> tokens;
@@ -489,10 +477,13 @@ void *threadIO(void *arg) {
                     g->graph.init(num);
                     Vflag = 1;
                     g->graph.V = num;
+                    g->graph.VEmpFlag = 1;
                 } else if (tokens[0] == "E") {
                     g->graph.vertex = g->graph.buildGraph(tokens[1], num);
                     Eflag = 1;
                     printFlag = 1;
+                    g->graph.EEmpFlag = 1;
+
                 } else {
                     std::cout << "invalid input!" << std::endl;
                 }
@@ -506,13 +497,7 @@ void *threadIO(void *arg) {
             }
 
         }
-        pthread_mutex_unlock(&lock);
     }
-
-    //pthread_mutex_unlock(&lock);
-
-
-    // g->graph.printRes();
 
     return  NULL;
 
@@ -523,9 +508,6 @@ int main(int argc, char** argv) {
     int status;
     clockid_t cid;
     int j, s;
-    std::vector<long long int> cnf_res;
-    std::vector<long long int> vc1_res;
-    std::vector<long long int> vc2_res;
 
     pthread_t thIO;
     pthread_t thCNF;
@@ -553,50 +535,29 @@ int main(int argc, char** argv) {
         if (status != 0) {
             std::cerr << "Error when creating thread VC2!" << std::endl;
         }
-        /*
-        pclock("Process total CPU time: ", CLOCK_PROCESS_CPUTIME_ID);
 
-        s = pthread_getcpuclockid(pthread_self(), &cid);
-        if (s != 0)
-            handle_error_en(s, "pthread_getcpuclockid");
-        pclock("Main thread CPU time:   ", cid);
-
-        s = pthread_getcpuclockid(thIO, &cid);
-        if (s != 0)
-            handle_error_en(s, "pthread_getcpuclockid");
-        pclock("thread IO CPU time:    ", cid);
-        */
         /*
         s = pthread_getcpuclockid(thCNF, &cid);
         if (s != 0)
             handle_error_en(s, "pthread_getcpuclockid");
-        std::cout << "cnf" << pclock(cid) << std::endl;
-        // cnf_res.push_back(pclock(cid));
-        // pclock("thread CNF CPU time:    ", cid);
+        pclock("thread CNF CPU time:    ", cid);
 
         s = pthread_getcpuclockid(thVC1, &cid);
         if (s != 0)
             handle_error_en(s, "pthread_getcpuclockid");
-        std::cout << "vc1" << pclock(cid) << std::endl;        
-// vc1_res.push_back(pclock(cid));
-        // pclock("thread VC1 CPU time:    ", cid);
+        pclock("thread VC1 CPU time:    ", cid);
 
         s = pthread_getcpuclockid(thVC2, &cid);
         if (s != 0)
             handle_error_en(s, "pthread_getcpuclockid");
-        std::cout << "vc2" << pclock(cid) << std::endl;
-        // pclock("thread VC2 CPU time:    ", cid);
+        pclock("thread VC2 CPU time:    ", cid);
         */
+
         pthread_join(thIO, NULL);
         pthread_join(thCNF, NULL);
         pthread_join(thVC1, NULL);
         pthread_join(thVC2, NULL);
 
     }
-    /*
-    for(unsigned i = 0; i < cnf_res.size(); i++ ) {
-        std::cout << cnf_res[i] << ", ";
-    }
-    */
     return 0;
 }
