@@ -34,7 +34,7 @@ static void pclock(char *msg, clockid_t cid)
     if (clock_gettime(cid, &ts) == -1)
         handle_error("clock_gettime");
 
-    // printf("%4ld.%03ld\n", ts.tv_sec, ts.tv_nsec / 1000000);
+    printf("%4ld.%03ld\n", ts.tv_sec, ts.tv_nsec / 1000000);
 }
 
 // for split the string into tokens with delimeter
@@ -536,7 +536,7 @@ int main(int argc, char** argv) {
             std::cerr << "Error when creating thread VC2!" << std::endl;
         }
 
-        /*
+        /* 
         s = pthread_getcpuclockid(thCNF, &cid);
         if (s != 0)
             handle_error_en(s, "pthread_getcpuclockid");
@@ -546,12 +546,14 @@ int main(int argc, char** argv) {
         if (s != 0)
             handle_error_en(s, "pthread_getcpuclockid");
         pclock("thread VC1 CPU time:    ", cid);
+        */
 
         s = pthread_getcpuclockid(thVC2, &cid);
         if (s != 0)
             handle_error_en(s, "pthread_getcpuclockid");
-        pclock("thread VC2 CPU time:    ", cid);
-        */
+        pclock("thread vc2 CPU time:    ", cid);
+        
+        
 
         pthread_join(thIO, NULL);
         pthread_join(thCNF, NULL);
