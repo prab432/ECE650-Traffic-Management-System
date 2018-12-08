@@ -19,7 +19,9 @@
 
 int printFlag = 0;
 int countVec = 0;
+int s;
 
+clockid_t start_time1, start_time2, start_time3, end_time1, end_time2, end_time3, cid;
 
 #define handle_error(msg) \
                do { perror(msg); exit(EXIT_FAILURE); } while (0)
@@ -416,6 +418,17 @@ void *threadVC1(void *arg) {
         return NULL;
     }
     g->graph.approxVC1();
+	
+    s = pthread_getcpuclockid(pthread_self(), &start_time1);        
+    if (s != 0)
+        handle_error_en(s, "pthread_getcpuclockid");
+    pclock("thread main CPU time:    ", start_time1);
+	/*
+	s = pthread_getcpuclockid(thCNF, &start_time1);
+	if (s != 0) 
+	    handle_error_en(s, "pthread_getcpuclockid");
+	pclock("thread CNF CPU time:    ", start_time1);
+	*/
     return  NULL;
 }
 
@@ -426,6 +439,12 @@ void *threadVC2(void *arg) {
         return NULL;
     }
     g->graph.approxVC2();
+	
+    s = pthread_getcpuclockid(pthread_self(), &start_time2);        
+    if (s != 0)
+        handle_error_en(s, "pthread_getcpuclockid");
+    pclock("thread main CPU time:    ", start_time2);
+	
     return  NULL;
 }
 
@@ -508,7 +527,7 @@ int main(int argc, char** argv) {
     struct thread_data graph;
     int status;
     // clockid_t cid;
-    clockid_t start_time1, start_time2, start_time3, end_time1, end_time2, end_time3, cid;
+    // clockid_t start_time1, start_time2, start_time3, end_time1, end_time2, end_time3, cid;
     // timespec s_timespec1, s_timespec2, s_timespec3, e_timespec1, e_timespec2, e_timespec3;
 	
     int j, s;
@@ -539,7 +558,7 @@ int main(int argc, char** argv) {
         if (status != 0) {
             std::cerr << "Error when creating thread VC2!" << std::endl;
         }
-
+	/*
         s = pthread_getcpuclockid(pthread_self(), &cid);        
         if (s != 0)
             handle_error_en(s, "pthread_getcpuclockid");
@@ -559,7 +578,7 @@ int main(int argc, char** argv) {
         if (s != 0)
             handle_error_en(s, "pthread_getcpuclockid");
 	pclock("thread VC2 CPU time:    ", start_time3);
-
+	*/
         pthread_join(thIO, NULL);
         pthread_join(thCNF, NULL);
         pthread_join(thVC1, NULL);
