@@ -24,21 +24,23 @@ int s;
 clockid_t start_time1, start_time2, start_time3, end_time1, end_time2, end_time3, cid;
 timespec s_timespec1, s_timespec2, s_timespec3, e_timespec1, e_timespec2, e_timespec3;
 
+
 #define handle_error(msg) \
                do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 #define handle_error_en(en, msg) \
                do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
 
-static void pclock(char *msg, clockid_t cid)
+static void pclock(clockid_t cid)
 {
     struct timespec ts;
 
-    printf("%s", msg);
+    // printf("%s", msg);
     if (clock_gettime(cid, &ts) == -1)
         handle_error("clock_gettime");
-
-    printf("%4ld.%03ld\n", ts.tv_sec, ts.tv_nsec / 1000000);
+	
+    return ts;
+    // printf("%4ld.%03ld\n", ts.tv_sec, ts.tv_nsec / 1000000);
 }
 
 // for split the string into tokens with delimeter
@@ -414,7 +416,9 @@ void *threadCNF(void *arg) {
     if (s != 0)
         handle_error_en(s, "pthread_getcpuclockid");
     // pclock("thread main CPU time:    ", start_time2);
-    std::cout << "thread cnf: " << clock_gettime(start_time3, &s_timespec3) << std::endl;
+    // std::cout << "thread cnf: " << clock_gettime(start_time3, &s_timespec3) << std::endl;
+    s_timespec3 = pclock(start_time3);
+    printf("thread cnf: %4ld.%03ld\n", s_timespec3.tv_sec, s_timespec3.tv_nsec / 1000000);
 	
     return  NULL;
 }
@@ -430,7 +434,7 @@ void *threadVC1(void *arg) {
     s = pthread_getcpuclockid(pthread_self(), &start_time1);        
     if (s != 0)
         handle_error_en(s, "pthread_getcpuclockid");
-    std::cout << "thread vc1: " << clock_gettime(start_time1, &s_timespec1) << std::endl;
+    // std::cout << "thread vc1: " << clock_gettime(start_time1, &s_timespec1) << std::endl;
 	
     // pclock("thread main CPU time:    ", start_time1);
 	/*
@@ -439,6 +443,10 @@ void *threadVC1(void *arg) {
 	    handle_error_en(s, "pthread_getcpuclockid");
 	pclock("thread CNF CPU time:    ", start_time1);
 	*/
+	
+    s_timespec1 = pclock(start_time1);
+    printf("thread vc2: %4ld.%03ld\n", s_timespec1.tv_sec, s_timespec1.tv_nsec / 1000000);
+	
     return  NULL;
 }
 
@@ -454,7 +462,10 @@ void *threadVC2(void *arg) {
     if (s != 0)
         handle_error_en(s, "pthread_getcpuclockid");
     // pclock("thread main CPU time:    ", start_time2);
-    std::cout << "thread vc2: " << clock_gettime(start_time2, &s_timespec2) << std::endl;
+    s_timespec2 = pclock(start_time2);
+    printf("thread vc2: %4ld.%03ld\n", s_timespec2.tv_sec, s_timespec2.tv_nsec / 1000000);
+	
+    // std::cout << "thread vc2: " << clock_gettime(start_time2, &s_timespec2) << std::endl;
 	
     return  NULL;
 }
