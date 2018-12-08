@@ -46,7 +46,7 @@ clockid_t start_time1, start_time2, start_time3, end_time1, end_time2, end_time3
 timespec s_timespec1, s_timespec2, s_timespec3, e_timespec1, e_timespec2, e_timespec3;
 
 std::vector<long> timeCNF, timeVC1, timeVC2;
-std::vector<int> ratioCNF, ratioVC1, ratioVC2;
+std::vector<float> ratioCNF, ratioVC1, ratioVC2;
 
 #define handle_error(msg) \
                do { perror(msg); exit(EXIT_FAILURE); } while (0)
@@ -553,11 +553,11 @@ void *threadIO(void *arg) {
 	    std::cout << "VC2 mean is: " << averageVC2 << std::endl;
 	    std::cout << "VC2 std is: " << sdVC2 << std::endl;	
 		
-	    std::vector<int> ratio1, ratio2;
+	    std::vector<float> ratio1, ratio2;
 		
 	    for(unsigned i = 0; i < ratioCNF.size(); i++) {
-	    	ratio1.push_back(ratioVC1[i] / ratioCNF[i]);
-		ratio2.push_back(ratioVC2[i] / ratioCNF[i]);    
+	    	ratio1.push_back(float(ratioVC1[i]) / float(ratioCNF[i]));
+		ratio2.push_back(float(ratioVC2[i]) / float(ratioCNF[i]));    
 	    }
 	    int averageRatioVC1 = accumulate( ratio1.begin(), ratio1.end(), 0.0) / ratio1.size();
 	    int averageRatioVC2 = accumulate( ratio2.begin(), ratio2.end(), 0.0) / ratio2.size();		
