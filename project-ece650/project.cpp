@@ -46,6 +46,7 @@ clockid_t start_time1, start_time2, start_time3, end_time1, end_time2, end_time3
 timespec s_timespec1, s_timespec2, s_timespec3, e_timespec1, e_timespec2, e_timespec3;
 
 std::vector<long> timeCNF, timeVC1, timeVC2;
+std::vector<int> ratioCNF, ratioVC1, ratioVC2;
 
 #define handle_error(msg) \
                do { perror(msg); exit(EXIT_FAILURE); } while (0)
@@ -397,6 +398,7 @@ void Graph::printRes() {
             resCNF.append(",");
         }
     }
+    ratioCNF.push_back(resultCNF.size());
 
     for (unsigned i = 0; i < this->resultVC1.size(); i++) {
         if (i == this->resultVC1.size() - 1) {
@@ -406,6 +408,7 @@ void Graph::printRes() {
             resVC1.append(",");
         }
     }
+    ratioVC1.push_back(resultVC1.size());
 
     for (unsigned i = 0; i < this->resultVC2.size(); i++) {
         if (i == this->resultVC2.size() - 1) {
@@ -415,10 +418,11 @@ void Graph::printRes() {
             resVC2.append(",");
         }
     }
-
-    std::cout << resCNF << std::endl;
-    std::cout << resVC1 << std::endl;
-    std::cout << resVC2 << std::endl;
+    ratioVC2.push_back(resultVC2.size());
+	
+    // std::cout << resCNF << std::endl;
+    // std::cout << resVC1 << std::endl;
+    // std::cout << resVC2 << std::endl;
 
     this->resultCNF.clear();
     this->resultVC1.clear();
@@ -549,7 +553,19 @@ void *threadIO(void *arg) {
 	    long sdVC2 = calculateSD(timeVC2);
 	    std::cout << "VC2 mean is: " << averageVC2 << std::endl;
 	    std::cout << "VC2 std is: " << sdVC2 << std::endl;	
-		    
+		
+	    std::vector<int> ratio1, ratio2;
+		
+	    for(unsigned i = 0; i < ratioCNF.size(); i++) {
+	    	ratio1.push_back(ratioVC1[i] / ratioCNF[i]);
+		ratio2.push_back(ratioVC2[i] / ratioCNF[i]);    
+	    }
+	    int averageRatioVC1 = accumulate( ratio1.begin(), ratio1.end(), 0.0) / ratio1.size();
+	    int averageRatioVC2 = accumulate( ratio2.begin(), ratio2.end(), 0.0) / ratio2.size();		
+		
+	    std::cout << "ratioVC1 / ratioCNF = " << averageRatioVC1 << std::endl;
+	    std::cout << "ratioVC2 / ratioCNF = " << averageRatioVC2 << std::endl;	
+		
 	    exit(0);
         }
 
