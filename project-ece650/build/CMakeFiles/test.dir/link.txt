@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++11 -Wall  -pthread    CMakeFiles/test.dir/test.cpp.o  -o test -rdynamic minisat/libminisat.a -lz 
