@@ -30,8 +30,7 @@ timespec s_timespec1, s_timespec2, s_timespec3, e_timespec1, e_timespec2, e_time
 
 #define handle_error_en(en, msg) \
                do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
-
-static void pclock(clockid_t cid)
+timespec pclock(clockid_t cid)
 {
     struct timespec ts;
 
