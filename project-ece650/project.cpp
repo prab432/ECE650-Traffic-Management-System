@@ -20,6 +20,7 @@
 int printFlag = 0;
 int countVec = 0;
 
+
 #define handle_error(msg) \
                do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
@@ -506,7 +507,10 @@ void *threadIO(void *arg) {
 int main(int argc, char** argv) {
     struct thread_data graph;
     int status;
-    clockid_t cid;
+    // clockid_t cid;
+    clockid_t start_time1, start_time2, start_time3, end_time1, end_time2, end_time3, cid;
+    // timespec s_timespec1, s_timespec2, s_timespec3, e_timespec1, e_timespec2, e_timespec3;
+	
     int j, s;
 
     pthread_t thIO;
@@ -536,46 +540,26 @@ int main(int argc, char** argv) {
             std::cerr << "Error when creating thread VC2!" << std::endl;
         }
 
-       /* 
-        s = pthread_getcpuclockid(pthread_self(), &cid);
-        // std::cout << "pthread cid is: " << cid << std::endl;
-        
+        s = pthread_getcpuclockid(pthread_self(), &cid);        
         if (s != 0)
             handle_error_en(s, "pthread_getcpuclockid");
         pclock("thread main CPU time:    ", cid);
-        */
-        s = pthread_getcpuclockid(thCNF, &cid);
-        // std::cout << "thvc1 cid is: " << cid << std::endl;
         
-        if (s != 0) {
-            std::cout << "error with thCNF" << std::endl;
-	    continue;
-            // handle_error_en(s, "pthread_getcpuclockid");
-        }else{
-            pclock("thread CNF CPU time:    ", cid);
-        }
+        s = pthread_getcpuclockid(thCNF, &start_time1);
+        if (s != 0) 
+            handle_error_en(s, "pthread_getcpuclockid");
+        pclock("thread CNF CPU time:    ", start_time1);
        
-        s = pthread_getcpuclockid(thVC1, &cid);
-        // std::cout << "thcnf cid is: " << cid << std::endl;
-        
-        if (s != 0) {
-	    std::cout << "error with thVC1" << std::endl;
-	    continue;
-            // handle_error_en(s, "pthread_getcpuclockid");
-        }else{
-            pclock("thread VC1 CPU time:    ", cid);
-        }
+        s = pthread_getcpuclockid(thVC1, &start_time2);
+        if (s != 0)
+            handle_error_en(s, "pthread_getcpuclockid");
+        pclock("thread VC1 CPU time:    ", start_time2);
 
-        s = pthread_getcpuclockid(thVC2, &cid);
-        // std::cout << "thcnf cid is: " << cid << std::endl;
-        //         
-        if (s != 0) {
-	    std::cout << "error with thvc2" << std::endl;
-	    continue;
-            // handle_error_en(s, "pthread_getcpuclockid");
-        }else{
-	    pclock("thread VC2 CPU time:    ", cid);
-        }
+        s = pthread_getcpuclockid(thVC2, &start_time3);        
+        if (s != 0)
+            handle_error_en(s, "pthread_getcpuclockid");
+	pclock("thread VC2 CPU time:    ", start_time3);
+
         pthread_join(thIO, NULL);
         pthread_join(thCNF, NULL);
         pthread_join(thVC1, NULL);
