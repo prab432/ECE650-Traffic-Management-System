@@ -22,6 +22,7 @@ int countVec = 0;
 int s;
 
 clockid_t start_time1, start_time2, start_time3, end_time1, end_time2, end_time3, cid;
+timespec s_timespec1, s_timespec2, s_timespec3, e_timespec1, e_timespec2, e_timespec3;
 
 #define handle_error(msg) \
                do { perror(msg); exit(EXIT_FAILURE); } while (0)
@@ -408,6 +409,13 @@ void *threadCNF(void *arg) {
         return NULL;
     }
     g->graph.approxCNF();
+	
+    s = pthread_getcpuclockid(pthread_self(), &start_time3);        
+    if (s != 0)
+        handle_error_en(s, "pthread_getcpuclockid");
+    // pclock("thread main CPU time:    ", start_time2);
+    std::cout << "thread cnf: " << clock_gettime(start_time3, &s_timespec3) << std::endl;
+	
     return  NULL;
 }
 
@@ -422,7 +430,9 @@ void *threadVC1(void *arg) {
     s = pthread_getcpuclockid(pthread_self(), &start_time1);        
     if (s != 0)
         handle_error_en(s, "pthread_getcpuclockid");
-    pclock("thread main CPU time:    ", start_time1);
+    std::cout << "thread vc1: " << clock_gettime(start_time1, &s_timespec1) << std::endl;
+	
+    // pclock("thread main CPU time:    ", start_time1);
 	/*
 	s = pthread_getcpuclockid(thCNF, &start_time1);
 	if (s != 0) 
@@ -443,7 +453,8 @@ void *threadVC2(void *arg) {
     s = pthread_getcpuclockid(pthread_self(), &start_time2);        
     if (s != 0)
         handle_error_en(s, "pthread_getcpuclockid");
-    pclock("thread main CPU time:    ", start_time2);
+    // pclock("thread main CPU time:    ", start_time2);
+    std::cout << "thread vc2: " << clock_gettime(start_time2, &s_timespec2) << std::endl;
 	
     return  NULL;
 }
