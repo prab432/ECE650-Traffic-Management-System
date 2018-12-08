@@ -536,25 +536,46 @@ int main(int argc, char** argv) {
             std::cerr << "Error when creating thread VC2!" << std::endl;
         }
 
-        /* 
-        s = pthread_getcpuclockid(thCNF, &cid);
+       /* 
+        s = pthread_getcpuclockid(pthread_self(), &cid);
+        // std::cout << "pthread cid is: " << cid << std::endl;
+        
         if (s != 0)
             handle_error_en(s, "pthread_getcpuclockid");
-        pclock("thread CNF CPU time:    ", cid);
-
-        s = pthread_getcpuclockid(thVC1, &cid);
-        if (s != 0)
-            handle_error_en(s, "pthread_getcpuclockid");
-        pclock("thread VC1 CPU time:    ", cid);
+        pclock("thread main CPU time:    ", cid);
         */
+        s = pthread_getcpuclockid(thCNF, &cid);
+        // std::cout << "thvc1 cid is: " << cid << std::endl;
+        
+        if (s != 0) {
+            std::cout << "error with thCNF" << std::endl;
+	    continue;
+            // handle_error_en(s, "pthread_getcpuclockid");
+        }else{
+            pclock("thread CNF CPU time:    ", cid);
+        }
+       
+        s = pthread_getcpuclockid(thVC1, &cid);
+        // std::cout << "thcnf cid is: " << cid << std::endl;
+        
+        if (s != 0) {
+	    std::cout << "error with thVC1" << std::endl;
+	    continue;
+            // handle_error_en(s, "pthread_getcpuclockid");
+        }else{
+            pclock("thread VC1 CPU time:    ", cid);
+        }
 
         s = pthread_getcpuclockid(thVC2, &cid);
-        if (s != 0)
-            handle_error_en(s, "pthread_getcpuclockid");
-        pclock("thread vc2 CPU time:    ", cid);
-        
-        
-
+        // std::cout << "thcnf cid is: " << cid << std::endl;
+        //         
+        if (s != 0) {
+	    std::cout << "error with thvc2" << std::endl;
+	    continue;
+            // handle_error_en(s, "pthread_getcpuclockid");
+        }else{
+	    pclock("thread VC2 CPU time:    ", cid);
+        }
         pthread_join(thIO, NULL);
         pthread_join(thCNF, NULL);
         pthread_join(thVC1, NULL);

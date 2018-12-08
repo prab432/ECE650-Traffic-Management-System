@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 #include <pthread.h>
 #include <string.h>
 #include <errno.h>
-
+#include <iostream>
 #define handle_error(msg) \
                do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     s = pthread_create(&thread, NULL, thread_start, NULL);
     if (s != 0)
         handle_error_en(s, "pthread_create");
-
+    /*
     printf("Main thread sleeping\n");
     sleep(1);
 
@@ -109,12 +109,12 @@ int main(int argc, char *argv[])
         handle_error_en(s, "pthread_getcpuclockid");
     pclock("Main thread CPU time:   ", cid);
 
-
+    */
     s = pthread_getcpuclockid(thread, &cid);
     if (s != 0)
         handle_error_en(s, "pthread_getcpuclockid");
     pclock("Subthread CPU time: 1    ", cid);
-
+    std::cout << "subthread cid is: " << cid << std::endl;
     exit(EXIT_SUCCESS);
 }
 
