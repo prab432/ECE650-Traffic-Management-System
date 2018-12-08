@@ -16,6 +16,27 @@
 #include <errno.h>
 #include <map>
 #include <set>
+#include <numeric>
+#include <cmath>
+
+long calculateSD(std::vector<long> data)
+{
+    long sum = 0, mean, standardDeviation = 0;
+
+    int i;
+
+    for(i = 0; i < data.size(); ++i)
+    {
+        sum += data[i];
+    }
+
+    mean = sum / data.size();
+
+    for(i = 0; i < data.size(); ++i)
+        standardDeviation += pow(data[i] - mean, 2);
+
+    return sqrt(standardDeviation / data.size());
+}
 
 int printFlag = 0;
 int countVec = 0;
@@ -507,10 +528,28 @@ void *threadIO(void *arg) {
         if(std::cin.eof())
         {
             // exit(0);
-	    std::cout << "hey i am leaving!" << std::endl;
+	    // std::cout << "hey i am leaving!" << std::endl;
+	    /*
 	    for(unsigned i = 0; i < timeCNF.size(); i++) {
 	        std::cout << timeCNF[i] << std::endl;
 	    }
+	    */
+		
+	    long averageCNF = accumulate( timeCNF.begin(), timeCNF.end(), 0.0) / timeCNF.size(); 
+	    long sdCNF = calculateSD(timeCNF);
+	    std::cout << "CNF mean is: " << averageCNF << std::endl;
+	    std::cout << "CNF std is: " << sdCNF << std::endl;	
+		
+	    long averageVC1 = accumulate( timeVC1.begin(), timeVC1.end(), 0.0) / timeVC1.size(); 
+	    long sdVC1 = calculateSD(timeVC1);
+	    std::cout << "VC1 mean is: " << averageVC1 << std::endl;
+	    std::cout << "VC1 std is: " << sdVC1 << std::endl;	
+		
+	    long averageVC2 = accumulate( timeVC2.begin(), timeVC2.end(), 0.0) / timeVC2.size(); 
+	    long sdVC2 = calculateSD(timeVC2);
+	    std::cout << "VC2 mean is: " << averageVC2 << std::endl;
+	    std::cout << "VC2 std is: " << sdVC2 << std::endl;	
+		    
 	    exit(0);
         }
 
