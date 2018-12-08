@@ -24,6 +24,7 @@ int s;
 clockid_t start_time1, start_time2, start_time3, end_time1, end_time2, end_time3, cid;
 timespec s_timespec1, s_timespec2, s_timespec3, e_timespec1, e_timespec2, e_timespec3;
 
+std::vector<long> timeCNF, timeVC1, timeVC2;
 
 #define handle_error(msg) \
                do { perror(msg); exit(EXIT_FAILURE); } while (0)
@@ -419,7 +420,8 @@ void *threadCNF(void *arg) {
     // std::cout << "thread cnf: " << clock_gettime(start_time3, &s_timespec3) << std::endl;
     s_timespec3 = pclock(start_time3);
     // printf("thread cnf: %08ld\n", s_timespec3.tv_nsec);
-    printf("thread cnf: %4ld.%08ld\n", s_timespec3.tv_sec, s_timespec3.tv_nsec / 1000000);
+    // printf("thread cnf: %4ld.%08ld\n", s_timespec3.tv_sec, s_timespec3.tv_nsec / 1000000);
+    timeCNF.push_back(s_timespec3.tv_sec * 1000000 + s_timespec3.tv_nsec / 1000);
 	
     return  NULL;
 }
@@ -447,7 +449,8 @@ void *threadVC1(void *arg) {
 	
     s_timespec1 = pclock(start_time1);
     // printf("thread vc1: %08ld\n", s_timespec1.tv_nsec);
-    printf("thread vc2: %4ld.%08ld\n", s_timespec1.tv_sec, s_timespec1.tv_nsec / 1000000);
+    // printf("thread vc2: %4ld.%08ld\n", s_timespec1.tv_sec, s_timespec1.tv_nsec / 1000000);
+    timeVC1.push_back(s_timespec1.tv_sec * 1000000 + s_timespec1.tv_nsec / 1000);
 	
     return  NULL;
 }
@@ -466,8 +469,8 @@ void *threadVC2(void *arg) {
     // pclock("thread main CPU time:    ", start_time2);
     s_timespec2 = pclock(start_time2);
     // printf("thread vc2: %08ld\n", s_timespec2.tv_nsec);
-    printf("thread vc2: %4ld.%08ld\n", s_timespec2.tv_sec, s_timespec2.tv_nsec / 1000000);
-	
+    // printf("thread vc2: %4ld.%08ld\n", s_timespec2.tv_sec, s_timespec2.tv_nsec / 1000000);
+    timeVC2.push_back(s_timespec2.tv_sec * 1000000 + s_timespec2.tv_nsec / 1000);
     // std::cout << "thread vc2: " << clock_gettime(start_time2, &s_timespec2) << std::endl;
 	
     return  NULL;
@@ -503,7 +506,12 @@ void *threadIO(void *arg) {
     while (flag == 0) {
         if(std::cin.eof())
         {
-            exit(0);
+            // exit(0);
+	    std::cout << "hey i am leaving!" << std::endl;
+	    for(unsigned i = 0; i < timeCNF.size(); i++) {
+	        std::cout << timeCNF[i] << std::endl;
+	    }
+	    exit(0);
         }
 
         while (!std::cin.eof()) {
@@ -608,8 +616,8 @@ int main(int argc, char** argv) {
         pthread_join(thCNF, NULL);
         pthread_join(thVC1, NULL);
         pthread_join(thVC2, NULL);
-        std::cout << "The End!" << std::endl;
+        
     }
-    
+    // std::cout << "The End!" << std::endl;
     return 0;
 }
