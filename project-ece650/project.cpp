@@ -38,6 +38,25 @@ long calculateSD(std::vector<long> data)
     return sqrt(standardDeviation / data.size());
 }
 
+float calculateSDfloat(std::vector<float> data)
+{
+    float sum = 0, mean, standardDeviation = 0;
+
+    int i;
+
+    for(i = 0; i < data.size(); ++i)
+    {
+        sum += data[i];
+    }
+
+    mean = sum / data.size();
+
+    for(i = 0; i < data.size(); ++i)
+        standardDeviation += pow(data[i] - mean, 2);
+
+    return sqrt(standardDeviation / data.size());
+}
+
 int printFlag = 0;
 int countVec = 0;
 int s;
@@ -560,11 +579,19 @@ void *threadIO(void *arg) {
 	    	ratio1.push_back(float(ratioVC1[i]) / float(ratioCNF[i]));
 		ratio2.push_back(float(ratioVC2[i]) / float(ratioCNF[i]));    
 	    }
-	    int averageRatioVC1 = accumulate( ratio1.begin(), ratio1.end(), 0.0) / ratio1.size();
-	    int averageRatioVC2 = accumulate( ratio2.begin(), ratio2.end(), 0.0) / ratio2.size();		
 		
-	    std::cout << "ratioVC1 / ratioCNF = " << averageRatioVC1 << std::endl;
-	    std::cout << "ratioVC2 / ratioCNF = " << averageRatioVC2 << std::endl;	
+	    float averageRatioVC1 = accumulate( ratio1.begin(), ratio1.end(), 0.0) / ratio1.size();
+	    float averageRatioVC2 = accumulate( ratio2.begin(), ratio2.end(), 0.0) / ratio2.size();	
+		
+	    float sdratioVC1 = calculateSDfloat(ratio1);
+	    float sdratioVC2 = calculateSDfloat(ratio2);
+		
+	    std::cout << "ratio VC1 average is: " << averageRatioVC1 << std::endl;
+	    std::cout << "ratio VC1 std is: " << sdratioVC1 << std::endl;
+		
+	    std::cout << "ratio VC2 average is: " << averageRatioVC2 << std::endl;
+	    std::cout << "ratio VC2 std is: " << sdratioVC2 << std::endl;
+		
 		
 	    exit(0);
         }
