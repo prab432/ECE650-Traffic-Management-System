@@ -1,0 +1,6 @@
+/home/y2568zha/ece650/ECE650/prj-ece650/build/minisat/CMakeFiles/minisat-lib-shared.dir
+/home/y2568zha/ece650/ECE650/prj-ece650/build/minisat/CMakeFiles/minisat-lib-static.dir
+/home/y2568zha/ece650/ECE650/prj-ece650/build/minisat/CMakeFiles/minisat_core.dir
+/home/y2568zha/ece650/ECE650/prj-ece650/build/minisat/CMakeFiles/minisat_simp.dir
+/home/y2568zha/ece650/ECE650/prj-ece650/build/CMakeFiles/prj-ece650.dir
+/home/y2568zha/ece650/ECE650/prj-ece650/build/CMakeFiles/test.dir
