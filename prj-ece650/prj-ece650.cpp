@@ -265,17 +265,18 @@ void Graph::approxVC2() {
     while(!intVerticesCopy.empty()) {
         int max = intVerticesCopy.size();
         int min = 0;
+	int u, v;
 
         int randidx = random(min, max);
         if (randidx % 2 == 0) {
-            int u = intVerticesCopy[randidx];
-            int v = intVerticesCopy[randidx + 1];
+            u = intVerticesCopy[randidx];
+            v = intVerticesCopy[randidx + 1];
 
             this->resultVC2.push_back(u);
             this->resultVC2.push_back(v);
         } else {
-            int u = intVerticesCopy[randidx - 1];
-            int v = intVerticesCopy[randidx];
+            u = intVerticesCopy[randidx - 1];
+            v = intVerticesCopy[randidx];
 
             this->resultVC2.push_back(u);
             this->resultVC2.push_back(v);
