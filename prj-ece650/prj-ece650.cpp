@@ -263,8 +263,10 @@ void Graph::approxVC2() {
     std::vector<int> intVerticesCopy = intVertices;
 
     while(!intVerticesCopy.empty()) {
+	/*    
         int max = intVerticesCopy.size();
         int min = 0;
+	
 	int u, v;
 
         int randidx = random(min, max);
@@ -281,6 +283,12 @@ void Graph::approxVC2() {
             this->resultVC2.push_back(u);
             this->resultVC2.push_back(v);
         }
+	*/
+	u = intVerticesCopy[0];
+        v = intVerticesCopy[1];
+
+        this->resultVC2.push_back(u);
+        this->resultVC2.push_back(v);
 
         intVertices.clear();
 
@@ -421,6 +429,7 @@ void Graph::approxCNF() {
     }
 
     sort(this->resultCNF.begin(), this->resultCNF.end());
+	
     countVec++;
 }
 
@@ -549,18 +558,18 @@ void *threadIO(void *arg) {
         {
 	    long averageCNF = accumulate( timeCNF.begin(), timeCNF.end(), 0.0) / timeCNF.size(); 
 	    long sdCNF = calculateSD(timeCNF);
-	    std::cout << "CNF mean is: " << averageCNF << std::endl;
-	    std::cout << "CNF std is: " << sdCNF << std::endl;	
+	    // std::cout << "CNF mean is: " << averageCNF << std::endl;
+	    // std::cout << "CNF std is: " << sdCNF << std::endl;	
 		
 	    long averageVC1 = accumulate( timeVC1.begin(), timeVC1.end(), 0.0) / timeVC1.size(); 
 	    long sdVC1 = calculateSD(timeVC1);
-	    std::cout << "VC1 mean is: " << averageVC1 << std::endl;
-	    std::cout << "VC1 std is: " << sdVC1 << std::endl;	
+	    // std::cout << "VC1 mean is: " << averageVC1 << std::endl;
+	    // std::cout << "VC1 std is: " << sdVC1 << std::endl;	
 		
 	    long averageVC2 = accumulate( timeVC2.begin(), timeVC2.end(), 0.0) / timeVC2.size(); 
 	    long sdVC2 = calculateSD(timeVC2);
-	    std::cout << "VC2 mean is: " << averageVC2 << std::endl;
-	    std::cout << "VC2 std is: " << sdVC2 << std::endl;	
+	    // std::cout << "VC2 mean is: " << averageVC2 << std::endl;
+	    // std::cout << "VC2 std is: " << sdVC2 << std::endl;	
 		
 	    std::vector<float> ratio1, ratio2;
 		
