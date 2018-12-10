@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(pro-ece650)
+project(prj-ece650)
 
 if (EXISTS "${CMAKE_SOURCE_DIR}/minisat")
   add_subdirectory(minisat)
