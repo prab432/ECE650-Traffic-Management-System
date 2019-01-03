@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++11 -Wall  -pthread    CMakeFiles/prj-ece650.dir/prj-ece650.cpp.o  -o prj-ece650 -rdynamic minisat/libminisat.a -lz 
